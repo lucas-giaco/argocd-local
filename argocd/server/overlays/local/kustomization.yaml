@@ -10,3 +10,4 @@ resources:
 # Apps managed by argo
 - ../../../apps/ingress-nginx
 - ../../../apps/argocd
+- ../../../apps/metrics-server
