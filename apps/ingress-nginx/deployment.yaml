@@ -43,6 +43,7 @@ spec:
             - /nginx-ingress-controller
             - --election-id=ingress-controller-leader
             - --ingress-class=nginx
+            - --enable-ssl-passthrough
             - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
             - --publish-status-address=localhost
           securityContext:
