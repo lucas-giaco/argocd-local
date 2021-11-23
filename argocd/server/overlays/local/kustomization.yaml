@@ -8,5 +8,5 @@ resources:
 - ingress.yaml
 
 # Apps managed by argo
-- ../apps/ingress-nginx.yaml
-- ../apps/argocd.yaml
+- ../../../apps/ingress-nginx.yaml
+- ../../../apps/argocd.yaml
