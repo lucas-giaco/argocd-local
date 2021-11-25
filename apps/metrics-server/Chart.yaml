@@ -4,8 +4,8 @@ description: Metrics Server is a scalable, efficient source of container resourc
   metrics for Kubernetes built-in autoscaling pipelines.
 
 type: application
-version: 3.7.0
-appVersion: "0.5.2"
+version: 0.1.0
+appVersion: "v0.5.2"
 
 dependencies:
   - name: metrics-server
