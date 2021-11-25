@@ -7,7 +7,7 @@ resources:
 - ../../base
 - ingress.yaml
 
-# Apps managed by argo
-- ../../../apps/ingress-nginx
+# Base apps
 - ../../../apps/argocd
-- ../../../apps/metrics-server/base
+- ../../../apps/ingress-nginx
+- ../../../apps/metrics-server/overlays/local
