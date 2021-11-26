@@ -5,9 +5,6 @@ metrics-server:
     tag: "0.5.2"
     pullPolicy: IfNotPresent
 
-  imagePullSecrets: []
-  # - registrySecretName
-
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -30,11 +27,6 @@ metrics-server:
     # work with this release.
     create: true
 
-  podLabels: {}
-  podAnnotations: {}
-
-  podSecurityContext: {}
-
   securityContext:
     readOnlyRootFilesystem: true
     runAsNonRoot: true
@@ -55,12 +47,6 @@ metrics-server:
 
   replicas: 1
 
-  updateStrategy: {}
-  #   type: RollingUpdate
-  #   rollingUpdate:
-  #     maxSurge: 0
-  #     maxUnavailable: 1
-
   podDisruptionBudget:
     # https://kubernetes.io/docs/tasks/run-application/configure-pdb/
     enabled: false
@@ -73,8 +59,6 @@ metrics-server:
     - --kubelet-use-node-status-port
     - --metric-resolution=15s
     - --kubelet-insecure-tls
-
-  args: []
 
   livenessProbe:
     httpGet:
@@ -101,15 +85,3 @@ metrics-server:
     labels:
       kubernetes.io/cluster-service: "true"
       kubernetes.io/name: "metrics-server"
-
-  resources: {}
-
-  extraVolumeMounts: []
-
-  extraVolumes: []
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
