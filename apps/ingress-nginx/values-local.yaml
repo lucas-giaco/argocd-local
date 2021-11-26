@@ -486,9 +486,6 @@ ingress-nginx:
       # type: LoadBalancer
 
       type: NodePort
-      nodePorts:
-        http: 80
-        https: 443
       # nodePorts:
       #   http: ""
       #   https: ""
