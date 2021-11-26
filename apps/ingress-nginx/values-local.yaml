@@ -99,7 +99,7 @@ ingress-nginx:
     ingressClassResource:
       name: nginx
       enabled: true
-      default: false
+      default: true
       controllerValue: "k8s.io/ingress-nginx"
 
       # Parameters is a link to a custom resource containing additional
