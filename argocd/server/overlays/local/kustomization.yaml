@@ -9,5 +9,5 @@ resources:
 
 # Base apps
 - ../../../apps/argocd
-- ../../../apps/ingress-nginx
+- ../../../apps/ingress-nginx/overlays/local
 - ../../../apps/metrics-server/overlays/local
