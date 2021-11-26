@@ -2,7 +2,7 @@ metrics-server:
   image:
     repository: k8s.gcr.io/metrics-server/metrics-server
     # Overrides the image tag whose default is v{{ .Chart.AppVersion }}
-    tag: "0.5.2"
+    tag: "v0.5.2"
     pullPolicy: IfNotPresent
 
   serviceAccount:
