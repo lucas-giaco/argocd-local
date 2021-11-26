@@ -8,7 +8,8 @@ spec:
     repoURL: https://github.com/lucas-giaco/argocd-local.git
     targetRevision: HEAD
     helm:
-      values: values.yaml
+      valueFiles:
+      - "values.yaml"
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kube-system
