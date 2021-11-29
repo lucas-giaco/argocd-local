@@ -1335,7 +1335,7 @@ kube-prometheus-stack:
   ## Configuration for kube-state-metrics subchart
   ##
   kube-state-metrics:
-    namespaceOverride: ""
+    namespaceOverride: "kube-system"
     rbac:
       create: true
     podSecurityPolicy:
