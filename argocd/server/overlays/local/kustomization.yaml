@@ -10,6 +10,7 @@ resources:
 # Base apps
 - ../../../apps/argocd
 - ../../../apps/ingress-nginx/overlays/local
+- ../../../apps/cert-manager
 # Monitoring
 - ../../../apps/metrics-server/overlays/local
 - ../../../apps/prometheus/overlays/local
