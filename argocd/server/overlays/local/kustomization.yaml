@@ -10,7 +10,11 @@ resources:
 # Base apps
 - ../../../apps/argocd
 - ../../../apps/ingress-nginx/overlays/local
-- ../../../apps/cert-manager
 # Monitoring
 - ../../../apps/metrics-server/overlays/local
 - ../../../apps/prometheus/overlays/local
+
+# The apps aren't needed for a local env but I
+# want to add the to test the deployment process
+- ../../../apps/cert-manager
+- ../../../apps/external-dns
