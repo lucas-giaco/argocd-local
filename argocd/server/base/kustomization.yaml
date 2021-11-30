@@ -5,4 +5,11 @@ namespace: argocd
 
 resources:
 - namespace.yaml
-- https://raw.githubusercontent.com/argoproj/argo-cd/v2.1.7/manifests/install.yaml
+- application-controller
+- config
+- crds
+- dex
+- notification
+- redis
+- repo-server
+- server

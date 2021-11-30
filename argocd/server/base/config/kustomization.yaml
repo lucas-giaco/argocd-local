@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- configmap.yaml
+- cmd-params-configmap.yaml
+- secret.yaml
+- rbac-configmap.yaml
+- ssh-known-hosts-configmap.yaml
+- tls-certs-configmap.yaml
+- gpg-keys-configmap.yaml
