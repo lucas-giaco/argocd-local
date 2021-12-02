@@ -13,6 +13,8 @@ resources:
 # Monitoring
 - ../../../apps/metrics-server/overlays/local
 - ../../../apps/prometheus/overlays/local
+# Security
+- ../../../apps/kube-bench
 
 # The apps aren't needed for a local env but I
 # want to add the to test the deployment process
