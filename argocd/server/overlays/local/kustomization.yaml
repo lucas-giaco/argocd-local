@@ -15,6 +15,8 @@ resources:
 - ../../../apps/prometheus/overlays/local
 # Security
 - ../../../apps/kube-bench
+# Infra provisioning
+- ../../../apps/crossplane
 
 # The apps aren't needed for a local env but I
 # want to add the to test the deployment process
