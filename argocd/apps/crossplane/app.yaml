@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cert-manager
+  name: crossplane
 spec:
   source:
-    path: apps/cert-manager
+    path: apps/crossplane
     repoURL: https://github.com/lucas-giaco/argocd-local.git
     targetRevision: HEAD
     helm:
@@ -12,7 +12,7 @@ spec:
       - "values.yaml"
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: cert-manager
+    namespace: crossplane-system
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
