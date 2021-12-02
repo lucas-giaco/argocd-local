@@ -1,81 +1,82 @@
-replicas: 1
-
-deploymentStrategy: RollingUpdate
-
-image:
-  repository: crossplane/crossplane
-  tag: v1.5.1
-  pullPolicy: IfNotPresent
-
-nodeSelector: {}
-tolerations: {}
-affinity: {}
-
-leaderElection: true
-args: {}
-
-provider:
-  packages: []
-
-configuration:
-  packages: []
-
-imagePullSecrets:
-- dockerhub
-
-rbacManager:
-  deploy: true
-  skipAggregatedClusterRoles: false
+crossplane:
   replicas: 1
-  managementPolicy: All
-  leaderElection: true
-  args: {}
+
+  deploymentStrategy: RollingUpdate
+
+  image:
+    repository: crossplane/crossplane
+    tag: v1.5.1
+    pullPolicy: IfNotPresent
+
   nodeSelector: {}
   tolerations: {}
   affinity: {}
 
-priorityClassName: ""
+  leaderElection: true
+  args: {}
 
-resourcesCrossplane:
-  limits:
-    cpu: 100m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 256Mi
+  provider:
+    packages: []
 
-securityContextCrossplane:
-  runAsUser: 65532
-  runAsGroup: 65532
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+  configuration:
+    packages: []
 
-packageCache:
-  medium: ""
-  sizeLimit: 5Mi
-  pvc: ""
+  imagePullSecrets:
+  - dockerhub
 
-resourcesRBACManager:
-  limits:
-    cpu: 100m
-    memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 256Mi
+  rbacManager:
+    deploy: true
+    skipAggregatedClusterRoles: false
+    replicas: 1
+    managementPolicy: All
+    leaderElection: true
+    args: {}
+    nodeSelector: {}
+    tolerations: {}
+    affinity: {}
 
-securityContextRBACManager:
-  runAsUser: 65532
-  runAsGroup: 65532
-  allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: true
+  priorityClassName: ""
 
-metrics:
-  enabled: false
+  resourcesCrossplane:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
-extraEnvVarsCrossplane: {}
+  securityContextCrossplane:
+    runAsUser: 65532
+    runAsGroup: 65532
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
 
-extraEnvVarsRBACManager: {}
+  packageCache:
+    medium: ""
+    sizeLimit: 5Mi
+    pvc: ""
 
-podSecurityContextCrossplane: {}
+  resourcesRBACManager:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
-podSecurityContextRBACManager: {}
+  securityContextRBACManager:
+    runAsUser: 65532
+    runAsGroup: 65532
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+
+  metrics:
+    enabled: false
+
+  extraEnvVarsCrossplane: {}
+
+  extraEnvVarsRBACManager: {}
+
+  podSecurityContextCrossplane: {}
+
+  podSecurityContextRBACManager: {}

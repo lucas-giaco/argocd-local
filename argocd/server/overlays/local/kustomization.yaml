@@ -18,7 +18,8 @@ resources:
 # Infra provisioning
 - ../../../apps/crossplane
 
-# The apps aren't needed for a local env but I
-# want to add the to test the deployment process
+# These apps aren't needed for a local env but I
+# want to add them to test the deployment process
 - ../../../apps/cert-manager
 - ../../../apps/external-dns
+- ../../../apps/cluster-autoscaler
