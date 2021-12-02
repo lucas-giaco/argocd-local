@@ -10,13 +10,6 @@ spec:
     helm:
       valueFiles:
       - "values.yaml"
-  # Ignore diffs in cluster role rules as they are managed by crossplane rbac-manager
-  ignoreDifferences:
-    - kind: ClusterRole
-      name: crossplane
-      namespace: crossplane-system
-      jsonPointers:
-        - /rules
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: crossplane-system
