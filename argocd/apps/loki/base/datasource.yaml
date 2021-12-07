@@ -1,10 +1,11 @@
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
   name: loki-datasource
+  namespace: logging
   labels:
     grafana_datasource: "true"
-data:
+stringData:
   datasource.yaml: |-
     apiVersion: 1
     datasources:
