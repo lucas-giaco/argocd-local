@@ -15,7 +15,7 @@ resources:
 - ../../../apps/grafana/overlays/local
 - ../../../apps/prometheus/overlays/local
 # Logging
-- ../../../apps/loki
+- ../../../apps/loki/overlays/local
 # Security
 - ../../../apps/kube-bench
 # Infra provisioning
