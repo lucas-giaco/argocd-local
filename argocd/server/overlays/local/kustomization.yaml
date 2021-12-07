@@ -12,7 +12,10 @@ resources:
 - ../../../apps/ingress-nginx/overlays/local
 # Monitoring
 - ../../../apps/metrics-server/overlays/local
+- ../../../apps/grafana/overlays/local
 - ../../../apps/prometheus/overlays/local
+# Logging
+- ../../../apps/loki
 # Security
 - ../../../apps/kube-bench
 # Infra provisioning
