@@ -10,7 +10,7 @@ prometheus-adapter:
 
   listenPort: 6443
 
-  priorityClassName: "system-cluster-critical"
+  priorityClassName: system-cluster-critical
 
   # Url to access prometheus
   prometheus:
