@@ -10,8 +10,10 @@ resources:
 # Base apps
 - ../../../apps/argocd
 - ../../../apps/ingress-nginx/overlays/local
-# Monitoring
+# Metrics scraping
 - ../../../apps/metrics-server/overlays/local
+- ../../../apps/prometheus-adapter/overlays/local
+# Monitoring
 - ../../../apps/grafana/overlays/local
 - ../../../apps/prometheus/overlays/local
 # Logging

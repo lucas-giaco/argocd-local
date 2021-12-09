@@ -1,0 +1,12 @@
+apiVersion: v2
+name: prometheus-adapter
+description: A Helm chart for k8s prometheus adapter
+type: application
+
+version: 0.1.0
+appVersion: v0.9.1
+
+dependencies:
+  - name: prometheus-adapter
+    repository: https://prometheus-community.github.io/helm-charts
+    version: 3.0.0

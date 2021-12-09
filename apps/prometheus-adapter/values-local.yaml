@@ -1,0 +1,70 @@
+prometheus-adapter:
+  image:
+    repository: k8s.gcr.io/prometheus-adapter/prometheus-adapter
+    tag: v0.9.1
+    pullPolicy: IfNotPresent
+
+  logLevel: 4
+
+  metricsRelistInterval: 1m
+
+  listenPort: 6443
+
+  priorityClassName: "system-cluster-critical"
+
+  # Url to access prometheus
+  prometheus:
+    # Value is templated
+    url: http://prometheus.monitoring
+    port: 9090
+    path: ""
+
+  replicas: 1
+
+  # k8s 1.21 needs fsGroup to be set for non root deployments
+  # ref: https://github.com/kubernetes/kubernetes/issues/70679
+  podSecurityContext:
+    fsGroup: 10001
+
+  rbac:
+    # Specifies whether RBAC resources should be created
+    create: true
+
+  psp:
+    # Specifies whether PSP resources should be created
+    create: false
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+
+  rules:
+    default: true
+
+  service:
+    port: 443
+    type: ClusterIP
+
+  tls:
+    enable: false
+
+  hostNetwork:
+    # Specifies if prometheus-adapter should be started in hostNetwork mode.
+    #
+    # You would require this enabled if you use alternate overlay networking for pods and
+    # API server unable to communicate with metrics-server. As an example, this is required
+    # if you use Weave network on EKS. See also dnsPolicy
+    enabled: false
+
+  # Deployment strategy type
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+
+  podDisruptionBudget:
+    enabled: false
+
+  certManager:
+    enabled: false
