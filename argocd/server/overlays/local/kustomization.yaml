@@ -3,6 +3,17 @@ kind: Kustomization
 
 namespace: argocd
 
+images:
+  - name: quay.io/argoproj/argocd
+    newName: argoproj/argocd
+    newTag: v2.1.7
+  - name: ghcr.io/dexidp/dex
+    newTag: v2.30.0
+  - name: argoprojlabs/argocd-notifications
+    newTag: v1.2.0
+  - name: redis
+    newTag: 6.2.4-alpine
+
 resources:
 - ../../base
 - ingress.yaml
