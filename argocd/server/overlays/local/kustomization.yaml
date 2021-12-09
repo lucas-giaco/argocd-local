@@ -29,6 +29,7 @@ resources:
 - ../../../apps/prometheus/overlays/local
 # Logging
 - ../../../apps/loki/overlays/local
+- ../../../apps/promtail/overlays/local
 # Security
 - ../../../apps/kube-bench
 # Infra provisioning

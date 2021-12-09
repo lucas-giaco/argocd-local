@@ -1,0 +1,210 @@
+promtail:
+  initContainer:
+    enabled: false
+
+  image:
+    registry: docker.io
+    # -- Docker image repository
+    repository: grafana/promtail
+    # -- Overrides the image tag whose default is the chart's appVersion
+    tag: null
+    # -- Docker image pull policy
+    pullPolicy: IfNotPresent
+
+  priorityClassName: system-cluster-critical
+
+  # -- Liveness probe
+  livenessProbe: {}
+
+  # -- Readiness probe
+  # @default -- See `values.yaml`
+  readinessProbe:
+    failureThreshold: 5
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+
+  # -- The security context for pods
+  podSecurityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # -- The security context for containers
+  containerSecurityContext:
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+    allowPrivilegeEscalation: false
+
+  rbac:
+    # -- Specifies whether RBAC resources are to be created
+    create: true
+    # -- Specifies whether a PodSecurityPolicy is to be created
+    pspEnabled: false
+
+  serviceAccount:
+    # -- Specifies whether a ServiceAccount should be created
+    create: true
+
+  # -- Tolerations for pods. By default, pods will be scheduled on master/control-plane nodes.
+  tolerations:
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+
+  # -- Default volumes that are mounted into pods. In most cases, these should not be changed.
+  # Use `extraVolumes`/`extraVolumeMounts` for additional custom volumes.
+  # @default -- See `values.yaml`
+  defaultVolumes:
+    - name: containers
+      hostPath:
+        path: /var/lib/docker/containers
+    - name: pods
+      hostPath:
+        path: /var/log/pods
+
+  # -- Default volume mounts. Corresponds to `volumes`.
+  # @default -- See `values.yaml`
+  defaultVolumeMounts:
+    - name: containers
+      mountPath: /var/lib/docker/containers
+      readOnly: true
+    - name: pods
+      mountPath: /var/log/pods
+      readOnly: true
+
+  # ServiceMonitor configuration
+  serviceMonitor:
+    enabled: false
+
+  # -- Section for crafting Promtails config file. The only directly relevant value is `config.file`
+  # which is a templated string that references the other values and snippets below this key.
+  # @default -- See `values.yaml`
+  config:
+    # -- The log level of the Promtail server
+    # Must be reference in `config.file` to configure `server.log_level`
+    # See default config in `values.yaml`
+    logLevel: info
+    # -- The port of the Promtail server
+    # Must be reference in `config.file` to configure `server.http_listen_port`
+    # See default config in `values.yaml`
+    serverPort: 3101
+    # -- The Loki address to post logs to.
+    # Must be reference in `config.file` to configure `client.url`.
+    # See default config in `values.yaml`
+    lokiAddress: http://loki:3100/loki/api/v1/push
+    # -- A section of reusable snippets that can be reference in `config.file`.
+    # Custom snippets may be added in order to reduce redundancy.
+    # This is especially helpful when multiple `kubernetes_sd_configs` are use which usually have large parts in common.
+    # @default -- See `values.yaml`
+    snippets:
+      pipelineStages:
+        - cri: {}
+      common:
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_node_name
+          target_label: node_name
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_namespace
+          target_label: namespace
+        - action: replace
+          replacement: $1
+          separator: /
+          source_labels:
+            - namespace
+            - app
+          target_label: job
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_name
+          target_label: pod
+        - action: replace
+          source_labels:
+            - __meta_kubernetes_pod_container_name
+          target_label: container
+        - action: replace
+          replacement: /var/log/pods/*$1/*.log
+          separator: /
+          source_labels:
+            - __meta_kubernetes_pod_uid
+            - __meta_kubernetes_pod_container_name
+          target_label: __path__
+        - action: replace
+          replacement: /var/log/pods/*$1/*.log
+          regex: true/(.*)
+          separator: /
+          source_labels:
+            - __meta_kubernetes_pod_annotationpresent_kubernetes_io_config_hash
+            - __meta_kubernetes_pod_annotation_kubernetes_io_config_hash
+            - __meta_kubernetes_pod_container_name
+          target_label: __path__
+
+      # If set to true, adds an additional label for the scrape job.
+      # This helps debug the Promtail config.
+      addScrapeJobLabel: false
+
+      scrapeConfigs: |
+        # See also https://github.com/grafana/loki/blob/master/production/ksonnet/promtail/scrape_config.libsonnet for reference
+        - job_name: kubernetes-pods
+          pipeline_stages:
+            {{- toYaml .Values.config.snippets.pipelineStages | nindent 4 }}
+          kubernetes_sd_configs:
+            - role: pod
+          relabel_configs:
+            - source_labels:
+                - __meta_kubernetes_pod_controller_name
+              regex: ([0-9a-z-.]+?)(-[0-9a-f]{8,10})?
+              action: replace
+              target_label: __tmp_controller_name
+            - source_labels:
+                - __meta_kubernetes_pod_label_app_kubernetes_io_name
+                - __meta_kubernetes_pod_label_app
+                - __tmp_controller_name
+                - __meta_kubernetes_pod_name
+              regex: ^;*([^;]+)(;.*)?$
+              action: replace
+              target_label: app
+            - source_labels:
+                - __meta_kubernetes_pod_label_app_kubernetes_io_component
+                - __meta_kubernetes_pod_label_component
+              regex: ^;*([^;]+)(;.*)?$
+              action: replace
+              target_label: component
+            {{- if .Values.config.snippets.addScrapeJobLabel }}
+            - replacement: kubernetes-pods
+              target_label: scrape_job
+            {{- end }}
+            {{- toYaml .Values.config.snippets.common | nindent 4 }}
+            {{- with .Values.config.snippets.extraRelabelConfigs }}
+            {{- toYaml . | nindent 4 }}
+            {{- end }}
+
+    # -- Config file contents for Promtail.
+    # Must be configured as string.
+    # It is templated so it can be assembled from reusable snippets in order to avoid redundancy.
+    # @default -- See `values.yaml`
+    file: |
+      server:
+        log_level: {{ .Values.config.logLevel }}
+        http_listen_port: {{ .Values.config.serverPort }}
+
+      client:
+        url: {{ tpl .Values.config.lokiAddress . }}
+        {{- tpl .Values.config.snippets.extraClientConfigs . | nindent 2 }}
+
+      positions:
+        filename: /run/promtail/positions.yaml
+
+      scrape_configs:
+        {{- tpl .Values.config.snippets.scrapeConfigs . | nindent 2 }}
+        {{- tpl .Values.config.snippets.extraScrapeConfigs . | nindent 2 }}
+
+  networkPolicy:
+    enabled: false
