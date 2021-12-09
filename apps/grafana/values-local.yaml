@@ -178,7 +178,6 @@ grafana:
     # Values can be templated
     annotations:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     labels: {}
     path: /
 
