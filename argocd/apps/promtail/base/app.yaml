@@ -12,7 +12,7 @@ spec:
       - "values.yaml"
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: monitoring
+    namespace: logging
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
