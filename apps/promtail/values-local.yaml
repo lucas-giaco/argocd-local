@@ -26,7 +26,17 @@ promtail:
   priorityClassName: system-cluster-critical
 
   # -- Liveness probe
-  livenessProbe: {}
+  #TODO: not sure if ready api will work as liveness probe
+  # but there's no promtail api that fits better
+  livenessProbe:
+    failureThreshold: 5
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
 
   # -- Readiness probe
   # @default -- See `values.yaml`
