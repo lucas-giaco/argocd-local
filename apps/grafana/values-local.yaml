@@ -466,6 +466,8 @@ grafana:
     log:
       mode: console
       level: info
+    server:
+      protocol: http
     security:
       strict_transport_security: false
     grafana_net:
