@@ -40,3 +40,4 @@ resources:
 - ../../../apps/cert-manager
 - ../../../apps/external-dns
 - ../../../apps/cluster-autoscaler
+- ../../../apps/external-secrets
