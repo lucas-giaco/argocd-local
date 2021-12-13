@@ -25,6 +25,9 @@ ingress-nginx:
       http: 80
       https: 443
 
+    config:
+      hsts: false
+
     # Process Ingress objects without ingressClass annotation/ingressClassName field
     # Overrides value for --watch-ingress-without-class flag of the controller binary
     # Defaults to false
