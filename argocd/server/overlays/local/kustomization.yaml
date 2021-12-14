@@ -14,6 +14,16 @@ images:
   - name: redis
     newTag: 6.2.4-alpine
 
+secretGenerator:
+  - name: argocd-secret
+    namespace: argocd
+    literals:
+      - admin.password=$2a$10$DNwsnBAV/5a/3lYSyvhJoOVrlOzFSPm44TBvt3o9qL3Kkk4pul2nG
+      - admin.passwordMtime=2021-12-14T14:18:52-03
+    behavior: merge
+    options:
+      disableNameSuffixHash: true
+
 resources:
 - ../../base
 - ingress.yaml
