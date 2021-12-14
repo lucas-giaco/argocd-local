@@ -45,6 +45,8 @@ resources:
 # Infra provisioning
 - ../../../apps/crossplane
 
+- ../../../apps/localstack
+
 # These apps aren't needed for a local env but I
 # want to add them to test the deployment process
 - ../../../apps/cert-manager

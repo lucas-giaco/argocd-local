@@ -1,0 +1,151 @@
+localstack:
+  # Default values for LocalStack
+  # Declare variables to be passed into your templates
+
+  replicaCount: 1
+
+  ## @param updateStrategy.type deployment strategy type
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  ## NOTE: Set it to `Recreate` if you use a PV that cannot be mounted on multiple pods
+  ##
+  updateStrategy:
+    type: RollingUpdate
+
+  image:
+    repository: localstack/localstack
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  ## @param extraDeploy Extra objects to deploy (value evaluated as a template)
+  ##
+  extraDeploy: []
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  debug: false
+
+  # kinesisErrorProbability: 0.0
+  # startServices: ""
+  # lambdaExecutor: ""
+
+  # This will enable the Docker daemon binding and allow
+  # Localstack to provide Lambdas and other AWS services
+  # who got container runtime dependencies
+  mountDind:
+    enabled: false
+    forceTLS: true
+    image: "docker:20.10-dind"
+
+  ## All the parameters from the configuatioan can be added using extraEnvVars.
+  ## Ref. https://github.com/localstack/localstack#configurations
+  extraEnvVars:
+    - name: DEFAULT_REGION
+      value: "us-east-1"
+    - name: SERVICES
+      value: "s3,route53,secretsmanager,kms"
+
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 10
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 3
+
+  service:
+    type: NodePort
+    edgeService:
+      name: edge
+      targetPort: 4566
+      nodePort: 31566
+    apiServices:
+      - name: es
+        targetPort: 4571
+        nodePort: 31571
+
+  ingress:
+    enabled: false
+    annotations:
+      # Adjust the ingress class when not using nginx as incress controller
+      kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  persistence:
+    ## @param persistence.enabled Enable persistence using Persistent Volume Claims
+    ##
+    enabled: false
+    ## @param persistence.storageClass Persistent Volume storage class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
+    ##
+    storageClass: ""
+    ## @param persistence.accessModes [array] Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param persistence.size Persistent Volume size
+    ##
+    size: 8Gi
+    ## @param persistence.dataSource Custom PVC data source
+    ##
+    dataSource: {}
+    ## @param persistence.existingClaim The name of an existing PVC to use for persistence
+    ##
+    existingClaim: ""
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

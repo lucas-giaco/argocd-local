@@ -1,0 +1,12 @@
+apiVersion: v2
+name: localstack
+description: LocalStack - a fully functional local AWS cloud stack
+type: application
+
+version: 0.1.0
+appVersion: latest
+
+dependencies:
+  - name: localstack
+    repository: https://helm.localstack.cloud
+    version: 0.3.7
