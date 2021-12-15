@@ -1,34 +1,4 @@
 kube-prometheus-stack:
-  # Default values for kube-prometheus-stack.
-  # This is a YAML-formatted file.
-  # Declare variables to be passed into your templates.
-
-  ## Provide a name in place of kube-prometheus-stack for `app:` labels
-  ##
-  nameOverride: ""
-
-  ## Override the deployment namespace
-  ##
-  namespaceOverride: ""
-
-  ## Provide a k8s version to auto dashboard import script example: kubeTargetVersionOverride: 1.16.6
-  ##
-  kubeTargetVersionOverride: ""
-
-  ## Allow kubeVersion to be overridden while creating the ingress
-  ##
-  kubeVersionOverride: ""
-
-  ## Provide a name to substitute for the full names of resources
-  ##
-  fullnameOverride: ""
-
-  ## Labels to apply to all resources
-  ##
-  commonLabels: {}
-  # scmhash: abc123
-  # myLabel: aakkmd
-
   ## Create default rules for monitoring the cluster
   ##
   defaultRules:
@@ -96,7 +66,7 @@ kube-prometheus-stack:
   global:
     rbac:
       create: true
-      pspEnabled: true
+      pspEnabled: false
       pspAnnotations: {}
         ## Specify pod annotations
         ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
@@ -623,158 +593,7 @@ kube-prometheus-stack:
   ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
   ##
   grafana:
-    enabled: true
-    namespaceOverride: ""
-
-    ## ForceDeployDatasources Create datasource configmap even if grafana deployment has been disabled
-    ##
-    forceDeployDatasources: false
-
-    ## ForceDeployDashboard Create dashboard configmap even if grafana deployment has been disabled
-    ##
-    forceDeployDashboards: false
-
-    ## Deploy default dashboards
-    ##
-    defaultDashboardsEnabled: true
-
-    ## Timezone for the default dashboards
-    ## Other options are: browser or a specific timezone, i.e. Europe/Luxembourg
-    ##
-    defaultDashboardsTimezone: utc
-
-    adminPassword: prom-operator
-
-    ingress:
-      ## If true, Grafana Ingress will be created
-      ##
-      enabled: true
-
-      ## Annotations for Grafana Ingress
-      ##
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-
-      ## Labels to be added to the Ingress
-      ##
-      labels: {}
-
-      ## Hostnames.
-      ## Must be provided if Ingress is enable.
-      ##
-      # hosts:
-      #   - grafana.domain.com
-      hosts:
-        - "dev.grafana.com"
-
-      ## Path for grafana ingress
-      path: /
-
-      ## TLS configuration for grafana Ingress
-      ## Secret must be manually created in the namespace
-      ##
-      tls: []
-      # - secretName: grafana-general-tls
-      #   hosts:
-      #   - grafana.example.com
-
-    sidecar:
-      dashboards:
-        enabled: true
-        label: grafana_dashboard
-
-        ## Annotations for Grafana dashboard configmaps
-        ##
-        annotations: {}
-        multicluster:
-          global:
-            enabled: false
-          etcd:
-            enabled: false
-        provider:
-          allowUiUpdates: false
-      datasources:
-        enabled: true
-        defaultDatasourceEnabled: true
-
-        ## URL of prometheus datasource
-        ##
-        # url: http://prometheus-stack-prometheus:9090/
-
-        # If not defined, will use prometheus.prometheusSpec.scrapeInterval or its default
-        # defaultDatasourceScrapeInterval: 15s
-
-        ## Annotations for Grafana datasource configmaps
-        ##
-        annotations: {}
-
-        ## Create datasource for each Pod of Prometheus StatefulSet;
-        ## this uses headless service `prometheus-operated` which is
-        ## created by Prometheus Operator
-        ## ref: https://git.io/fjaBS
-        createPrometheusReplicasDatasources: false
-        label: grafana_datasource
-
-    extraConfigmapMounts: []
-    # - name: certs-configmap
-    #   mountPath: /etc/grafana/ssl/
-    #   configMap: certs-configmap
-    #   readOnly: true
-
-    ## Configure additional grafana datasources (passed through tpl)
-    ## ref: http://docs.grafana.org/administration/provisioning/#datasources
-    additionalDataSources: []
-    # - name: prometheus-sample
-    #   access: proxy
-    #   basicAuth: true
-    #   basicAuthPassword: pass
-    #   basicAuthUser: daco
-    #   editable: false
-    #   jsonData:
-    #       tlsSkipVerify: true
-    #   orgId: 1
-    #   type: prometheus
-    #   url: https://{{ printf "%s-prometheus.svc" .Release.Name }}:9090
-    #   version: 1
-
-    ## Passed to grafana subchart and used by servicemonitor below
-    ##
-    service:
-      portName: service
-
-    ## If true, create a serviceMonitor for grafana
-    ##
-    serviceMonitor:
-      ## Scrape interval. If not set, the Prometheus default scrape interval is used.
-      ##
-      interval: ""
-      selfMonitor: true
-
-      # Path to use for scraping metrics. Might be different if server.root_url is set
-      # in grafana.ini
-      path: "/metrics"
-
-
-      ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      metricRelabelings: []
-      # - action: keep
-      #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
-      #   sourceLabels: [__name__]
-
-      ## RelabelConfigs to apply to samples before scraping
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      relabelings: []
-      # - sourceLabels: [__meta_kubernetes_pod_node_name]
-      #   separator: ;
-      #   regex: ^(.*)$
-      #   targetLabel: nodename
-      #   replacement: $1
-      #   action: replace
+    enabled: false
 
   ## Component scraping the kube api server
   ##
@@ -1054,61 +873,6 @@ kube-prometheus-stack:
   ##
   kubeDns:
     enabled: false
-    service:
-      dnsmasq:
-        port: 10054
-        targetPort: 10054
-      skydns:
-        port: 10055
-        targetPort: 10055
-      # selector:
-      #   k8s-app: kube-dns
-    serviceMonitor:
-      ## Scrape interval. If not set, the Prometheus default scrape interval is used.
-      ##
-      interval: ""
-
-      ## proxyUrl: URL of a proxy that should be used for scraping.
-      ##
-      proxyUrl: ""
-
-      ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      metricRelabelings: []
-      # - action: keep
-      #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
-      #   sourceLabels: [__name__]
-
-      ## RelabelConfigs to apply to samples before scraping
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      relabelings: []
-      # - sourceLabels: [__meta_kubernetes_pod_node_name]
-      #   separator: ;
-      #   regex: ^(.*)$
-      #   targetLabel: nodename
-      #   replacement: $1
-      #   action: replace
-
-      ## MetricRelabelConfigs to apply to samples after scraping, but before ingestion.
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      dnsmasqMetricRelabelings: []
-      # - action: keep
-      #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
-      #   sourceLabels: [__name__]
-
-      ## RelabelConfigs to apply to samples before scraping
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/api.md#relabelconfig
-      ##
-      dnsmasqRelabelings: []
-      # - sourceLabels: [__meta_kubernetes_pod_node_name]
-      #   separator: ;
-      #   regex: ^(.*)$
-      #   targetLabel: nodename
-      #   replacement: $1
-      #   action: replace
 
   ## Component scraping etcd
   ##

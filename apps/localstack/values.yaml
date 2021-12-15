@@ -67,6 +67,10 @@ localstack:
       value: "us-east-1"
     - name: SERVICES
       value: "s3,route53,secretsmanager,kms"
+    - name: HOSTNAME
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
 
   livenessProbe:
     initialDelaySeconds: 0
@@ -82,15 +86,13 @@ localstack:
     failureThreshold: 3
 
   service:
-    type: NodePort
+    type: ClusterIP
     edgeService:
       name: edge
       targetPort: 4566
-      nodePort: 31566
     apiServices:
       - name: es
         targetPort: 4571
-        nodePort: 31571
 
   ingress:
     enabled: false

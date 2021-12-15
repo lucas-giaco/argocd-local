@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app.kubernetes.io/name: sealed-secrets
+  app.kubernetes.io/version: v0.16.0
+
+images:
+  - name: quay.io/bitnami/sealed-secrets-controller
+    newTag: v0.16.0
+
+resources:
+- controller.yaml
+- controller-cluster-role.yaml
+- controller-cluster-role-binding.yaml
+- key-admin-role.yaml
+- key-admin-role-binding.yaml
+- proxier-role.yaml
+- proxier-role-binding.yaml
+- sealed-secret-crd.yaml
+- service.yaml
+- service-account.yaml
